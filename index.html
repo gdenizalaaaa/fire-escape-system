@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Fire Escape System</title>
+
+<style>
+body{
+margin:0;
+background:#111;
+color:white;
+font-family:Arial;
+}
+
+#map{
+width:100%;
+height:100vh;
+}
+</style>
+
+</head>
+
+<body>
+
+<h2 style="position:absolute;z-index:2;padding:10px">
+Fire Escape Navigation System
+</h2>
+
+<div id="map"></div>
+
+<script src="https://unpkg.com/three@0.160.0/build/three.js"></script>
+
+<script>
+
+const scene = new THREE.Scene()
+
+const camera = new THREE.PerspectiveCamera(
+75,
+window.innerWidth/window.innerHeight,
+0.1,
+1000
+)
+
+const renderer = new THREE.WebGLRenderer()
+
+renderer.setSize(
+window.innerWidth,
+window.innerHeight
+)
+
+document.getElementById("map").appendChild(renderer.domElement)
+
+camera.position.z = 10
+
+
+// bina zemini
+
+const floorGeometry = new THREE.PlaneGeometry(20,20)
+
+const floorMaterial = new THREE.MeshBasicMaterial({
+color:0x444444,
+side:THREE.DoubleSide
+})
+
+const floor = new THREE.Mesh(
+floorGeometry,
+floorMaterial
+)
+
+floor.rotation.x = Math.PI/2
+
+scene.add(floor)
+
+
+
+// sensör örneği
+
+function createSensor(x,y,color){
+
+const geometry = new THREE.SphereGeometry(0.3)
+
+const material = new THREE.MeshBasicMaterial({
+color:color
+})
+
+const sensor = new THREE.Mesh(
+geometry,
+material
+)
+
+sensor.position.set(x,0.3,y)
+
+scene.add(sensor)
+
+return sensor
+
+}
+
+
+const sensor1 = createSensor(2,2,0x00ff00)
+const sensor2 = createSensor(-3,4,0x00ff00)
+const sensor3 = createSensor(1,-5,0x00ff00)
+
+
+
+// yangın simülasyonu
+
+setTimeout(()=>{
+
+sensor2.material.color.set(0xff0000)
+
+},5000)
+
+
+
+function animate(){
+
+requestAnimationFrame(animate)
+
+renderer.render(scene,camera)
+
+}
+
+animate()
+
+</script>
+
+</body>
+</html>
